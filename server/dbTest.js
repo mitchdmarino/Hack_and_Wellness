@@ -1,13 +1,24 @@
-const db = require('./models')
+const db = require("./models");
 
-// testing user CREATE 
+// testing user CREATE
+async function sessionTest() {
+  try {
+    const user = await db.User.create({
+      email: "c@b.com",
+      name: "M",
+      password: "m",
+    });
 
-db.User.create({
-    name: 'Test boi', 
-    email: 'test@boi.com',
-    password: '1234'
-})
-    .then(user => {
-        console.log('what up test boiii!!! ', user)
-    })
-    .catch(console.warn)
+    const session = await db.Meditation.create({
+      goals: "Focus on what I can control",
+    });
+    user.meditations.push(session);
+    await user.save();
+    await session.save();
+    console.log(user);
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+sessionTest();
